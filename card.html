@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LetzPlay - Cart</title>
+  <link rel="stylesheet" href="index.css" />
+  <style>
+    table { width: 100%; margin: 20px 0; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    .cart-info { display: flex; align-items: center; gap: 10px; }
+    .cart-info img { width: 50px; }
+    .total-section { text-align: right; padding: 20px; font-weight: bold; }
+    .summary-line { padding: 5px 0; }
+  </style>
+</head>
+<body>
+  <section id="header">
+    <a href="index.html"><img src="./ltzlogo.png" alt="LetzPlay Logo" /></a>
+    <ul id="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="./profile.html">Profile</a></li>
+      <li><a href="aboutus.html">About Us</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </section>
+
+  <section>
+   <h2>Your Cart</h2>
+
+<!-- Deliver to section -->
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid #ddd; margin-bottom: 20px; border-radius: 8px;">
+  <div id="userDetails" class="cart-user-info">
+    <h3>Deliver To</h3>
+    <p><strong>Name:</strong> <span id="displayName"></span></p>
+    <p><strong>Address:</strong> <span id="displayAddress"></span></p>
+    <p><strong>Pincode:</strong> <span id="displayPincode"></span></p>
+  </div>
+  <div>
+    <img src="./cartimg.jpeg" alt="Delivery Poster" style="width: 400px;height 200px border-radius: 5px;" />
+  </div>
+</div>
+
+
+
+
+<div id="cart-items"></div>
+<div id="cart-summary" class="total-section"></div>
+
+
+  </section>
+
+  <script>
+  function renderCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let baseTotal = 0;
+    const cartContainer = document.getElementById("cart-items");
+
+    cartContainer.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${cart.map((item, index) => {
+            const itemTotal = item.qty * item.price;
+            baseTotal += itemTotal;
+            return `
+              <tr>
+                <td>
+                  <div class="cart-info">
+                    <img src="${item.img}" alt="${item.name}" />
+                    <span>${item.name}</span>
+                  </div>
+                </td>
+                <td>
+                  <input type="number" value="${item.qty}" min="1" onchange="updateQty(${index}, this.value)" />
+                </td>
+                <td>Rs ${itemTotal.toFixed(2)}</td>
+                <td>
+                  <button onclick="removeItem(${index})" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">Remove</button>
+                </td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    `;
+
+    const gst = baseTotal * 0.18;
+    const finalTotal = baseTotal + gst;
+
+    document.getElementById("cart-summary").innerHTML = `
+      <div class="summary-line">Subtotal: Rs ${baseTotal.toFixed(2)}</div>
+      <div class="summary-line">GST (18%): Rs ${gst.toFixed(2)}</div>
+      <div class="summary-line"><strong>Total Amount to be Paid: Rs ${finalTotal.toFixed(2)}</strong></div>
+    `;
+  }
+
+  function updateQty(index, qty) {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    cart[index].qty = parseInt(qty);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  function removeItem(index) {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    cart.splice(index, 1); // Remove the item
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart(); // Refresh the cart view
+  }
+
+  renderCart();
+</script
+
+  <section id="form-details">
+  <form id="contactForm">
+    <span>Leave a Message</span>
+    <h2>We love to hear from you</h2>
+    <input type="text" placeholder="Enter your name" />
+    <input type="text" placeholder="Enter your Email" />
+    <input type="text" placeholder="Enter your Subject" />
+    <textarea cols="30" rows="10" placeholder="Your Message"></textarea>
+    <button class="normal" type="submit">Submit</button>
+  </form>
+
+
+    <div class="people">
+      <div>
+        <img src="./engg.jpeg" alt="" />
+        <p>
+          <span>John Doe</span> Senior Marketing Manager <br />
+          Phone: ‪+91 1234567890‬ <br />
+          Email: contact@john123.com
+        </p>
+      </div>
+      <div>
+        <img src="./egg3.jpeg" alt="" />
+        <p>
+          <span>Mark Wood</span> Customer Support Specialist <br />
+          Phone: +91 9766656774 <br />
+          Email: contact@mark787.com
+        </p>
+      </div>
+      <div>
+        <img src="./egg2.jpeg" alt="" />
+        <p>
+          <span>Ravi Gupta</span> Operations Manager <br />
+          Phone: +91 9908877546 <br />
+          Email: contact@Ravi121.com
+        </p>
+      </div>
+    </div>
+  </section>
+  <div id="cart-container"></div>
+
+
+<script>
+function loadUserInfo() {
+  const user = JSON.parse(localStorage.getItem('loggedInUser'));
+  if (user) {
+    document.getElementById('displayName').innerText = user.name || 'Not Available';
+    document.getElementById('displayAddress').innerText = user.address || 'Not Available';
+    document.getElementById('displayPincode').innerText = user.pincode || 'Not Available';
+  } else {
+    document.getElementById('displayName').innerText = 'Not Available';
+    document.getElementById('displayAddress').innerText = 'Not Available';
+    document.getElementById('displayPincode').innerText = 'Not Available';
+  }
+}
+window.addEventListener('DOMContentLoaded', () => {
+  loadUserInfo();  // call the function that updates name, address, pincode
+  renderCart();    // make sure cart is rendered as well
+});
+
+</script>
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent form from submitting normally
+  alert('Thank you for your response!');
+  this.reset(); // Optional: Reset form fields
+});
+</script>
+
+
+
+</body>
+</html>
