@@ -1,4 +1,4 @@
-LETZPLAT is an E-commerce Platform for Sports Accessories
+LETZPLAY is an E-commerce Platform for Sports Accessories
 
 🏏 LetzPlay – Sports Accessories E-Commerce Website
 
